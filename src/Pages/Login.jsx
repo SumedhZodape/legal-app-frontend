@@ -1,89 +1,115 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm()
 
     const [selectedRole, setSelectedRole] = useState("Admin");
-
-
     const role = ["Admin", "Lawyer", "Client"]
+    const navigate = useNavigate();
+
+
+
+    // onsubmit function 
+    const onSubmit = async (data) => {
+        console.log(data)
+        
+        try {
+            let response = await fetch("http://localhost:8000/auth/login",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            let res = await response.json();
+            console.log(res)
+            if(res.success === true){
+                toast.success(res.message);
+                localStorage.setItem("user", JSON.stringify(res));
+                navigate("/dashboard")
+            }else{
+                toast.error(res.message)
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error("Server Error!")
+        }
+
+
+    }
+
+
 
     return (
         <>
-            <div className="w-full bg-amber-300 h-screen flex">
-                <div className="h-screen w-1/2 bg-gray-100 flex justify-center items-center">
-                    <div className="w-[55%] h-screen flex
-                    flex-col justify-center items-center">
-
-                        <div className="flex items-center gap-2">
-                            <i className="fa-solid fa-scale-balanced text-blue-600
-                        text-2xl"></i>
-                            <h1 className="text-gray-800 
-                    text-xl mt-3 mb-3 font-semibold">LegalDesk</h1>
-
+            <div className="w-full h-screen bg-gray-100 flex">
+                <div className="w-1/2 h-screen flex justify-center items-center">
+                    <div className="w-1/2 h-screen flex flex-col justify-center items-center">
+                        <div className="flex gap-2 font-serif text-xl">
+                            <i className="fa-solid fa-scale-balanced text-blue-500 text-xl pt-1"></i>
+                            <h1 className="text-gray-900 font-bold text-center">LegalDesk</h1>
                         </div>
 
-                        <h1 className="text-gray-800 
-                    text-2xl mb-3 font-bold">Welcome Back</h1>
-                        <p className="text-center text-gray-600 text-[14px]">Sign in to your account</p>
+                        <h1 className="text-2xl font-serif font-bold pt-2 text-gray-900">Welcome Back</h1>
+                        <p className="text-sm text-gray-400">Sign in to your account</p>
 
-                        <div className="flex w-full bg-muted rounded-full bg-gray-200 p-1 gap-3 mt-4">
+                        <div className="w-full mt-3 mb-3 rounded-2xl bg-gray-200">
 
                             {
-                                role?.map((ele, index) => {
+                                role.map((ele, index) => {
                                     return (
-                                        <button
-                                            onClick={(e) => {
-                                                setSelectedRole(ele)
-                                            }}
-                                            className={
-                                                selectedRole === ele ?
-                                                    "bg-black text-gray-200 rounded-full font-medium text-sm flex-1 px-3 py-2 transition-all" :
-                                                    "bg-gray-200 text-black rounded-full font-medium text-sm flex-1 px-3 py-2 transition-all"
-                                            }>{ele}</button>
+                                        <button key={index} className={selectedRole === ele ? `w-1/3 rounded-2xl pt-1 pb-1 text-gray-300 text-sm bg-gray-900
+                                     cursor-pointer transition-all`: `w-1/3 rounded-2xl pt-1 pb-1 text-gray-400 text-sm hover:bg-gray-900
+                                         hover:text-gray-300 focus:text-gray-200 focus:bg-gray-900 cursor-pointer 
+                                         transition-all"`}
+                                            onClick={() => { setSelectedRole(ele) }}
+                                        >{ele}</button>
                                     )
                                 })
                             }
-
                         </div>
 
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <label htmlFor="email" className="text-l">Email</label>
+                            <input type="email" id="email" placeholder=" ✉  you@example.com" className="w-full p-1 rounded-sm border-2 border-gray-200 outline-gray-200"
+                                {...register('email', { required: true })} />
+                            {errors.email && <sapn className="text-sm text-red-600 w-full">Email is required<br /></sapn>}
 
-                        <form className="max-w-sm mx-auto">
-                            <label for="input-group-1" className="block mb-2.5 text-sm font-medium text-heading">Email</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                    <svg className="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m3.5 5.5 7.893 6.036a1 1 0 0 0 1.214 0L20.5 5.5M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z" /></svg>
-                                </div>
-                                <input type="text" id="input-group-1" className="block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border 
-                                border-default-medium text-heading text-sm rounded-base 
-                                focus:ring-brand focus:border-brand shadow-xs 
-                                placeholder:text-body rounded-xl" placeholder="name@flowbite.com"/>
-                            </div>
+                            <label htmlFor="password" className="text-l">Password</label>
+                            <input type="password" id="password" placeholder="🔒 ****" className="w-full p-1 rounded-sm border-gray-200 border-2 outline-gray-200"
+                                {...register('password', { required: true })} />
+                            {errors.password && <span className="text-sm text-red-600 w-full">Password is required</span>}
 
-                            <label for="input-group-1" className="block mb-2.5 text-sm font-medium text-heading">Password</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                    <svg className="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m3.5 5.5 7.893 6.036a1 1 0 0 0 1.214 0L20.5 5.5M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z" /></svg>
-                                </div>
-                                <input type="text" id="input-group-1" className="block w-full ps-9 pe-3 py-2.5 bg-neutral-secondary-medium border 
-                                border-default-medium text-heading text-sm rounded-base 
-                                focus:ring-brand focus:border-brand shadow-xs 
-                                placeholder:text-body rounded-xl" placeholder="*******"/>
-                            </div>
+                            <button className="w-full bg-blue-600 rounded-md mt-2 p-1 text-sm text-gray-300 hover:bg-sky-700 hover:text-white cursor-pointer"
+                                type="submit">Sign In</button>
                         </form>
 
+                        <p className="text-sm text-gray-400 mt-5">Don't have an account? <span className="text-blue-600 hover:text-blue-700 hover:font-bold cursor-pointer"> Register </span> </p>
 
                     </div>
-
                 </div>
 
-
-                <div className="h-screen w-1/2 bg-gray-900 flex
-                    flex-col justify-center items-center">
-                    <i className="fa-solid fa-scale-balanced text-blue-600
-                        text-3xl"></i>
-                    <h1 className="text-white 
-                    text-2xl mt-4 mb-4">Justice, Simplified.</h1>
-                    <p className="w-1/2 text-center text-gray-300 text-[14px]">AI-Powered legel case management. Connect with top Lawyers, analyze your case, and get justice faster.</p>
+                <div className="w-1/2 h-screen bg-gray-900 flex justify-center items-center">
+                    <div className="w-1/2 h-screen flex justify-center items-center flex-col">
+                        <i className="fa-solid fa-scale-balanced text-blue-500 text-2xl "></i>
+                        <h1 className="p-2 text-2xl text-gray-300 font-serif">
+                            Justice, Simplifired
+                        </h1>
+                        <p className="text-wrap text-sm text-gray-400 text-center">
+                            AI-powered legal case management, Contact with top laywers,
+                            analyze your case, and get justice faster.
+                        </p>
+                    </div>
                 </div>
             </div>
         </>
