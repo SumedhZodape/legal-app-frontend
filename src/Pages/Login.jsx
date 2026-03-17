@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Login() {
     const {
@@ -12,32 +13,40 @@ function Login() {
         formState: { errors },
     } = useForm()
 
-    const [selectedRole, setSelectedRole] = useState("Admin");
-    const role = ["Admin", "Lawyer", "Client"]
+    // const [selectedRole, setSelectedRole] = useState("Admin");
+    // const role = ["Admin", "Lawyer", "Client"]
     const navigate = useNavigate();
+    const [isLawyer, setIsLawyer] = useState(false)
 
 
 
     // onsubmit function 
     const onSubmit = async (data) => {
         console.log(data)
-        
+
         try {
-            let response = await fetch("http://localhost:8000/auth/login",{
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
+            let response = await fetch("http://localhost:8000/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(data)
             });
 
             let res = await response.json();
             console.log(res)
-            if(res.success === true){
+            if (res.success === true) {
                 toast.success(res.message);
                 localStorage.setItem("user", JSON.stringify(res));
                 navigate("/dashboard")
-            }else{
+            } else {
+
+                if(res.message === "Please Complete your profile!"){
+                    setIsLawyer(true)
+                }else{
+                    setIsLawyer(false)
+                }
+
                 toast.error(res.message)
             }
         } catch (error) {
@@ -63,7 +72,7 @@ function Login() {
                         <h1 className="text-2xl font-serif font-bold pt-2 text-gray-900">Welcome Back</h1>
                         <p className="text-sm text-gray-400">Sign in to your account</p>
 
-                        <div className="w-full mt-3 mb-3 rounded-2xl bg-gray-200">
+                        {/* <div className="w-full mt-3 mb-3 rounded-2xl bg-gray-200">
 
                             {
                                 role.map((ele, index) => {
@@ -77,7 +86,7 @@ function Login() {
                                     )
                                 })
                             }
-                        </div>
+                        </div> */}
 
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <label htmlFor="email" className="text-l">Email</label>
@@ -94,7 +103,17 @@ function Login() {
                                 type="submit">Sign In</button>
                         </form>
 
-                        <p className="text-sm text-gray-400 mt-5">Don't have an account? <span className="text-blue-600 hover:text-blue-700 hover:font-bold cursor-pointer"> Register </span> </p>
+                        <p className="text-sm text-gray-400 mt-5">Don't have an account? <span className="text-blue-600 hover:text-blue-700 hover:font-bold 
+                        cursor-pointer"><Link to="/register">Register</Link></span> </p>
+
+                        {
+                            isLawyer ? (
+                                <p className="text-sm text-gray-400 mt-5">Please Complete Your Profile <span className="text-blue-600 hover:text-blue-700 hover:font-bold 
+                                cursor-pointer"><Link to="/profile">Profile</Link></span> </p>
+                            ): null
+                        }
+
+
 
                     </div>
                 </div>
