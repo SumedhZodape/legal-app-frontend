@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import Registration from './Pages/Registration';
 import Profile from './Pages/Profile';
 import ProtectRoute from './ProtectRoute';
+import AdminDashboard from './Pages/AdminDashboard';
 
 function App() {
 
@@ -16,10 +17,18 @@ function App() {
           <Route path="/" element={<Login/>}/>
           <Route path="/register" element={<Registration/>}/>
           <Route path="/profile" element={<Profile/>}/>
-          <Route path="/dashboard" element={
+          {/* <Route path="/dashboard" element={
 
             <ProtectRoute>
               <Dashboard/>
+            </ProtectRoute>
+            
+          }/> */}
+
+          <Route path="/admin-dashboard" element={
+
+            <ProtectRoute>
+              <AdminDashboard/>
             </ProtectRoute>
             
           }/>

@@ -38,7 +38,15 @@ function Login() {
             if (res.success === true) {
                 toast.success(res.message);
                 localStorage.setItem("user", JSON.stringify(res));
-                navigate("/dashboard")
+
+                if(res?.result?.role === "ADMIN"){
+                    navigate("/admin-dashboard")
+                }else if(res?.result?.role === "LAWYER"){
+                    navigate("/lawyer-dashboard")
+                }else{
+                    navigate("/client-dashboard")
+                }
+
             } else {
 
                 if(res.message === "Please Complete your profile!"){
