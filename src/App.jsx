@@ -7,6 +7,7 @@ import Registration from './Pages/Registration';
 import Profile from './Pages/Profile';
 import ProtectRoute from './ProtectRoute';
 import AdminDashboard from './Pages/AdminDashboard';
+import ClientDashboard from './Pages/ClientDashboard';
 
 function App() {
 
@@ -17,18 +18,23 @@ function App() {
           <Route path="/" element={<Login/>}/>
           <Route path="/register" element={<Registration/>}/>
           <Route path="/profile" element={<Profile/>}/>
-          {/* <Route path="/dashboard" element={
+          
 
-            <ProtectRoute>
-              <Dashboard/>
-            </ProtectRoute>
-            
-          }/> */}
 
+          {/* admin dashboard */}
           <Route path="/admin-dashboard" element={
 
             <ProtectRoute>
               <AdminDashboard/>
+            </ProtectRoute>
+            
+          }/>
+
+          {/* client dashboard */}
+          <Route path="/client-dashboard" element={
+
+            <ProtectRoute>
+              <ClientDashboard/>
             </ProtectRoute>
             
           }/>

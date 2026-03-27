@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
+import Loader from './Loader';
 
 const getStatusColor = (status) => {
     if (status === "APPROVED") return "bg-green-100 text-green-600";
@@ -7,12 +8,13 @@ const getStatusColor = (status) => {
     if (status === "BLOCKED") return "bg-red-100 text-red-600";
 };
 
-const AdminTable = ({ lawyerData }) => {
+const AdminTable = ({ lawyerData, fetchLawyers }) => {
     const token = JSON.parse(localStorage.getItem("user")).token || ""
     const [userData, setUserData] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedLawyer, setSelectedLawyer] = useState({});
-    const [remark, setRemark] = useState("")
+    const [remark, setRemark] = useState("");
+    const [loaderData, setLoaderData] = useState(false)
 
     useEffect(() => {
         if (lawyerData.length > 0) {
@@ -26,18 +28,19 @@ const AdminTable = ({ lawyerData }) => {
 
     // update status api 
 
-    const updateStatus = async(status) =>{
+    const updateStatus = async (status) => {
+        setLoaderData(true)
         try {
             console.log("Status: ", status);
             console.log("ProfileID: ", selectedLawyer._id);
             console.log("Remark: ", remark)
 
-            if(!token){
+            if (!token) {
                 return toast.error("Unathorized!")
             }
 
             const payload = {
-                status, 
+                status,
                 remark
             }
 
@@ -45,24 +48,27 @@ const AdminTable = ({ lawyerData }) => {
                 method: "PUT",
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                    "Content-Type":"application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(payload)
             })
 
             const res = await response.json();
 
-            if(res.success){
+            if (res.success) {
                 toast.success(res.message);
                 setIsModalOpen(false);
                 setSelectedLawyer({});
                 setRemark("");
-            }else{
+                fetchLawyers()
+            } else {
                 toast.error(res.message)
             }
 
         } catch (error) {
             toast.error("Server Error!")
+        } finally{
+            setLoaderData(false)
         }
     }
 
@@ -131,7 +137,8 @@ const AdminTable = ({ lawyerData }) => {
                                             <button className="px-3 py-1 text-xs border-2 border-yellow-100 text-yellow-600 rounded cursor-pointer"
                                                 onClick={(e) => {
                                                     setSelectedLawyer(lawyer)
-                                                    setIsModalOpen(true)
+                                                    setIsModalOpen(true);
+                                                    setRemark(lawyer?.adminRemark)
                                                 }}>
                                                 Action
                                             </button>
@@ -199,7 +206,8 @@ const AdminTable = ({ lawyerData }) => {
                                 <div className='flex w-[40%] gap-4'>
                                     <h3 className='text-[18px]'><b>Remark: </b></h3>
                                     <textarea type="text" placeholder='Enter Remark'
-                                        className='border w-full' onKeyUp={(e)=>{
+                                        defaultValue={remark}
+                                        className='border w-full' onKeyUp={(e) => {
                                             setRemark(e.target.value)
                                         }} />
                                 </div>
@@ -207,19 +215,27 @@ const AdminTable = ({ lawyerData }) => {
 
                             <div className='flex gap-5'>
                                 <button className='border border-green-400 bg-green-400
-                                    p-2 rounded-[5px] text-white cursor-pointer' onClick={()=>{updateStatus("APPROVED")}}>Approved</button>
+                                    p-2 rounded-[5px] text-white cursor-pointer' onClick={() => { updateStatus("APPROVED") }}>Approved</button>
                                 <button className='border border-red-400 bg-red-400
-                                    p-2 rounded-[5px] text-white cursor-pointer' onClick={()=>{updateStatus("REJECTED")}}>Rejected</button>
+                                    p-2 rounded-[5px] text-white cursor-pointer' onClick={() => { updateStatus("REJECTED") }}>Rejected</button>
                                 <button className='border border-orange-400 bg-orange-400
-                                    p-2 rounded-[5px] text-white cursor-pointer' onClick={()=>{updateStatus("RETURNED")}}>Returned</button>
+                                    p-2 rounded-[5px] text-white cursor-pointer' onClick={() => { updateStatus("RETURNED") }}>Returned</button>
                                 <button className='border border-red-400 bg-red-600
-                                    p-2 rounded-[5px] text-white cursor-pointer' onClick={()=>{updateStatus("BLOCKED")}}>Blocked</button>
+                                    p-2 rounded-[5px] text-white cursor-pointer' onClick={() => { updateStatus("BLOCKED") }}>Blocked</button>
                             </div>
 
                         </div>
                     </div>
                 ) : null
             }
+
+
+
+            {
+                loaderData ? <Loader/> : null
+            }
+
+            
         </>
     );
 };

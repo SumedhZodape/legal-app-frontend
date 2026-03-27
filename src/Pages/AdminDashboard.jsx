@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import AdminPanel from "../Component/AdminPanel";
 import AdminTable from '../Component/AdminTable';
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
-    const token = JSON.parse(localStorage.getItem("user")).token || ""
+    const token = JSON.parse(localStorage.getItem("user")).token || "";
+    const user = JSON.parse(localStorage.getItem("user"));
     const [panel, setPanel] = useState(true);
     const [selectedPanel, setSelectedPanel] = useState("Dashboard")
     const [lawyerData, setLawyerData] = useState([]);
@@ -19,7 +21,7 @@ function AdminDashboard() {
         }
     ]
     const KPI_Info = useRef({ total: 0, approved: 0, pending: 0, blocked: 0, rejected: 0, returned: 0 })
-
+    const navigate = useNavigate()
 
     // fetch lawyer function
     const fetchLawyers = async () => {
@@ -62,6 +64,13 @@ function AdminDashboard() {
 
 
 
+
+    // for sign out 
+
+    const singOut = () => {
+        localStorage.removeItem("user");
+        navigate("/")
+    }
 
     return (
         <div className='w-full h-screen bg-gray-100 md:flex md:flex-row'>
@@ -108,14 +117,15 @@ function AdminDashboard() {
                         <div className="flex items-center gap-3 mb-4">
                             <div className="h-7.5 w-7.5 bg-gray-800 flex justify-center text-sm items-center 
                             rounded-[50%]">
-                                A
+                                {user?.result?.name[0]}
                             </div>
                             <div>
-                                <h1 className="text-sm">Admin</h1>
+                                <h1 className="text-sm">{user?.result?.name}</h1>
                                 <p className="text-sm text-gray-500">Admin</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3 text-gray-500 cursor-pointer text-sm">
+                        <div className="flex items-center gap-3 text-gray-500 cursor-pointer text-sm"
+                        onClick={singOut}>
                             <i className="fa-solid fa-arrow-right-from-bracket text-sm" />
                             <h3>Sign Out</h3>
                         </div>
@@ -131,7 +141,7 @@ function AdminDashboard() {
 
 
                 {
-                    selectedPanel === "Dashboard" ? <AdminPanel KPI_Info={KPI_Info.current} /> : <AdminTable lawyerData={lawyerData} />
+                    selectedPanel === "Dashboard" ? <AdminPanel KPI_Info={KPI_Info.current} /> : <AdminTable lawyerData={lawyerData} fetchLawyers={fetchLawyers} />
                 }
 
 
