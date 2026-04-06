@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import ClientPanel from '../Component/ClientPanel'
-import ClientCase from '../Component/Clientcase'
 import ClientCreateCase from '../Component/ClientCreateCase';
 import { useNavigate } from 'react-router-dom';
+import ClientCaseTable from '../Component/ClientCaseTable';
 
 
 function ClientDashboard() {
@@ -49,7 +49,7 @@ function ClientDashboard() {
                             </div>
                             <div className="flex flex-col gap-3 p-5 text-gray-400">
                                 {
-                                    panelNames?.map((ele) => {
+                                    panelNames?.map((ele, index) => {
                                         return (
                                             <div className={
                                                 selectedPanel === ele.name ? `flex items-center text-gray-200  gap-2 p-1.5 bg-gray-800 cursor-pointer
@@ -59,7 +59,7 @@ function ClientDashboard() {
                                                 onClick={() => {
                                                     setSelectedPanel(ele.name)
                                                 }}
-
+                                                key={index}
                                             >
                                                 <i className={ele.classData} />
                                                 <h1>{ele.name}</h1>
@@ -97,7 +97,7 @@ function ClientDashboard() {
 
                     {
 
-                        selectedPanel === "Dashboard" ? <ClientPanel /> : selectedPanel === "My Case" ? <ClientCase /> : <ClientCreateCase />
+                        selectedPanel === "Dashboard" ? <ClientPanel /> : selectedPanel === "My Case" ? <ClientCaseTable /> : <ClientCreateCase />
 
                     }
 

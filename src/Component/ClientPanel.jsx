@@ -1,12 +1,12 @@
 import React from 'react'
 
 function ClientPanel() {
-  return (
-    <>
-       <div className='flex justify-between items-center'>
-            <h1 className='text-lg font-serif font-bold text-gray-900 p-2'>Client DashBoard</h1>
-            <button className='bg-blue-500 text-gray-300 text-sm ps-2  pe-2 pb-1 pt-1 rounded-sm'>Create Case</button>
-        </div>     
+    return (
+        <>
+            <div className='flex justify-between items-center'>
+                <h1 className='text-lg font-serif font-bold text-gray-900 p-2'>Client DashBoard</h1>
+                <button className='bg-blue-500 text-gray-300 text-sm ps-2  pe-2 pb-1 pt-1 rounded-sm'>Create Case</button>
+            </div>
             <div className='flex gap-5 flex-col lg:flex-row lg:p-5'>
                 <div className='w-11/12 shadow-lg bg-gray-50 m-auto rounded-sm'>
 
@@ -46,10 +46,10 @@ function ClientPanel() {
                         </div>
                     </div>
 
-                </div>                
+                </div>
             </div>
-    </>
-  )
+        </>
+    )
 }
 
 export default ClientPanel
