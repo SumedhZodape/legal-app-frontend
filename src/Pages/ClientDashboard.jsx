@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ClientPanel from '../Component/ClientPanel'
 import ClientCreateCase from '../Component/ClientCreateCase';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ function ClientDashboard() {
     const user = JSON.parse(localStorage.getItem("user")) || {}
     const [selectedPanel, setSelectedPanel] = useState("Dashboard");
     const navigate = useNavigate();
+    const [caseData, setCaseData] = useState([])
 
     const panelNames = [
         {
@@ -34,6 +35,34 @@ function ClientDashboard() {
 
     }
 
+
+    // fetch  all the cases
+
+    const fetchCases = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/client/mycases", {
+                headers:{
+                    "Authorization":`Bearer ${user.token}`
+                }
+            })
+
+            const res = await response.json();
+
+            if(res.success){
+                setCaseData(res.result)
+                console.log(res.result)
+            }else{
+                console.log("Error", res.message)
+            }
+
+        } catch (error) {
+            console.log("Error:", error)
+        }
+    }
+
+    useEffect(()=>{
+        fetchCases()
+    }, [])
 
     return (
         <>
@@ -97,7 +126,7 @@ function ClientDashboard() {
 
                     {
 
-                        selectedPanel === "Dashboard" ? <ClientPanel /> : selectedPanel === "My Case" ? <ClientCaseTable /> : <ClientCreateCase />
+                        selectedPanel === "Dashboard" ? <ClientPanel caseData={caseData} /> : selectedPanel === "My Case" ? <ClientCaseTable caseData={caseData} /> : <ClientCreateCase />
 
                     }
 

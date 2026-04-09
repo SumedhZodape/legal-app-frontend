@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ClientPanel() {
+function ClientPanel({caseData}) {
     return (
         <>
             <div className='flex justify-between items-center'>
@@ -15,7 +15,7 @@ function ClientPanel() {
                             <i className="fa-solid fa-user-group text-3xl text-gray-400 m-2 "></i>
                         </div>
                         <div className=" flex flex-col">
-                            <p className='text-xl font-bold text-gray-900'>1</p>
+                            <p className='text-xl font-bold text-gray-900'>{caseData?.length}</p>
                             <h5 className='text-gray-500 text-sm font-semibold mb-1'>Total Cases</h5>
                         </div>
                     </div>
@@ -28,8 +28,8 @@ function ClientPanel() {
                             <i className="fa-regular fa-clock text-3xl text-yellow-400 m-2"></i>
                         </div>
                         <div className=" flex flex-col">
-                            <p className='text-xl font-bold text-gray-900'>1</p>
-                            <h5 className='text-gray-500 text-sm font-semibold mb-1'>Open</h5>
+                            <p className='text-xl font-bold text-gray-900'>{caseData?.filter((ele)=>ele.caseStatus === "NEW")?.length}</p>
+                            <h5 className='text-gray-500 text-sm font-semibold mb-1'>New</h5>
                         </div>
                     </div>
 
@@ -41,8 +41,8 @@ function ClientPanel() {
                             <i className="fa-regular fa-circle-check text-3xl text-green-400 m-2"></i>
                         </div>
                         <div className=" flex flex-col">
-                            <p className='text-xl font-bold  text-gray-900'>0</p>
-                            <h5 className='text-gray-500 text-sm font-semibold mb-1'>Assigned</h5>
+                            <p className='text-xl font-bold  text-gray-900'>{caseData?.filter((ele)=>ele.caseStatus === "COMPLETED")?.length}</p>
+                            <h5 className='text-gray-500 text-sm font-semibold mb-1'>Completed</h5>
                         </div>
                     </div>
 

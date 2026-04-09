@@ -7,7 +7,7 @@ const getStatusColor = (status) => {
 };
 
 
-function ClientCaseTable() {
+function ClientCaseTable({caseData}) {
 
     const [userData, setUserData] = useState([10, 30, 40]);
     const [caseModal, setCaseModal] = useState(false)
@@ -47,21 +47,22 @@ function ClientCaseTable() {
                             </thead>
 
                             <tbody>
-                                {userData.map((lawyer, index) => (
+                                {caseData?.map((case_data, index) => (
                                     <tr key={index} className="border-0">
 
                                         <td className="p-2">
-                                            <p className="font-medium text-gray-900">Sumedh</p>
-                                            <p className="text-gray-400 text-xs">sumedh@gmail.com</p>
+                                            <p className="font-medium text-gray-900"
+                                            title={case_data?.problemStatement}>{case_data?.problemStatement?.slice(0,20) + "..."}</p>
+                                            {/* <p className="text-gray-400 text-xs">sumedh@gmail.com</p> */}
                                         </td>
 
-                                        <td className="p-2 text-sm">Criminal</td>
+                                        <td className="p-2 text-sm">{case_data?.location}</td>
 
-                                        <td className="p-2 text-gray-900">10 Years</td>
+                                        <td className="p-2 text-gray-900">{new Date(case_data?.caseDate) .toLocaleDateString("en-GB").replace(/\//g, "-")}</td>
 
-                                        <td className="p-2 text-sm font-medium text-gray-900">10 Cases</td>
+                                        <td className="p-2 text-sm font-medium text-gray-900">{case_data?.aiAnalysis?.caseSeverity}</td>
 
-                                        <td className="p-2 text-sm text-gray-900">₹ 1200 - ₹ 5000</td>
+                                        <td className="p-2 text-sm text-gray-900">₹ {case_data?.aiAnalysis?.estimatedFeeMin} - ₹ {case_data?.aiAnalysis?.estimatedFeeMax}</td>
 
                                         <td className="p-2">
                                             <span
