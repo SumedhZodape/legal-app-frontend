@@ -10,7 +10,8 @@ const getStatusColor = (status) => {
 function ClientCaseTable({caseData}) {
 
     const [userData, setUserData] = useState([10, 30, 40]);
-    const [caseModal, setCaseModal] = useState(false)
+    const [caseModal, setCaseModal] = useState(false);
+    const [singleCase, setSingleCase] = useState(null);
     const caseSeverity = "HIGH";
     const testData = [10,30,40]
 
@@ -80,6 +81,7 @@ function ClientCaseTable({caseData}) {
                                                 <i className="fa-solid fa-eye text-2xl text-blue-400"
                                                 onClick={()=>{
                                                     setCaseModal(true)
+                                                    setSingleCase(case_data)
                                                 }}></i>
                                             </button>
                                         </td>
@@ -109,14 +111,14 @@ function ClientCaseTable({caseData}) {
                                     <div className="bg-white rounded-lg shadow p-6 border">
 
                                         <p className="text-gray-700 mb-3">
-                                            Test Data
+                                            {singleCase?.problemStatement}
                                         </p>
 
                                         <div className="flex gap-4 text-sm text-gray-500 mb-4">
-                                            <span>📍 Test Data</span>
-                                            <span>📅 Test Data</span>
+                                            <span>📍 {singleCase?.location}</span>
+                                            <span>📅 {new Date(singleCase?.caseDate) .toLocaleDateString("en-GB").replace(/\//g, "-")}</span>
                                             <span className="ml-auto bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
-                                                Test Data
+                                                {singleCase?.caseStatus}
                                             </span>
                                         </div>
 
@@ -129,22 +131,22 @@ function ClientCaseTable({caseData}) {
                                             <div className="grid md:grid-cols-3 gap-4 text-sm">
 
                                                 <div>
-                                                    <p className="text-gray-500">Predicted Type</p>
+                                                    <p className="text-gray-500">{singleCase?.aiAnalysis?.predictedCaseType}</p>
                                                     <p className="font-medium">Test Data</p>
                                                 </div>
 
                                                 <div>
                                                     <p className="text-gray-500 mb-1">Severity</p>
-                                                    <span className={caseSeverity === "HIGH" ? "bg-red-500 text-white px-2 py-1 rounded" :
-                                                        caseSeverity === "MEDIUM" ? "px-2 py-1 rounded bg-amber-600 text-white" : "px-2 py-1 rounded text-white bg-yellow-300"
+                                                    <span className={singleCase?.aiAnalysis?.caseSeverity === "HIGH" ? "bg-red-500 text-white px-2 py-1 rounded" :
+                                                        singleCase?.aiAnalysis?.caseSeverity === "MEDIUM" ? "px-2 py-1 rounded bg-amber-600 text-white" : "px-2 py-1 rounded text-white bg-yellow-300"
                                                     }>
-                                                        Test Data
+                                                        {singleCase?.aiAnalysis?.caseSeverity}
                                                     </span>
                                                 </div>
 
                                                 <div>
                                                     <p className="text-gray-500">Estimated Fee</p>
-                                                    <p className="font-medium">₹Test Data - ₹Test Data</p>
+                                                    <p className="font-medium">₹ {singleCase?.aiAnalysis?.estimatedFeeMin} - ₹ {singleCase?.aiAnalysis?.estimatedFeeMax}</p>
                                                 </div>
 
                                             </div>
@@ -153,10 +155,10 @@ function ClientCaseTable({caseData}) {
                                                 <p className="text-gray-500">IPC Sections</p>
                                                 <div className="flex gap-2 mt-1 flex-wrap">
                                                     {
-                                                        testData?.map((ele, index) => {
+                                                        singleCase?.aiAnalysis?.suggestedIPCSections?.map((ele, index) => {
                                                             return (
                                                                 <span key={index} className="bg-gray-200 px-2 py-1 rounded">
-                                                                    Test Data
+                                                                    {ele}
                                                                 </span>
                                                             )
                                                         })
@@ -166,12 +168,12 @@ function ClientCaseTable({caseData}) {
 
                                             <div className="mt-4 text-sm">
                                                 <p className="text-gray-500">Worst Case Outcome</p>
-                                                <p>Test Data</p>
+                                                <p>{singleCase?.aiAnalysis?.wrostCaseOutcome}</p>
                                             </div>
 
                                             <div className="mt-2 text-sm">
                                                 <p className="text-gray-500">Remark</p>
-                                                <p>Test Data</p>
+                                                <p>{singleCase?.aiAnalysis?.remark}</p>
                                             </div>
 
                                         </div>

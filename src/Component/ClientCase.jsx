@@ -1,4 +1,8 @@
+import Select from "react-select";
+import { useState } from "react";
+
 function ClientCase({ caseData }) {
+  const [selectedLaweyer, setSelectedLawyer] = useState([]);
 
   console.log(caseData)
 
@@ -78,11 +82,31 @@ function ClientCase({ caseData }) {
 
           </div>
 
-          <div className="mt-4 text-sm">
-            <p className="text-gray-500">Attachments</p>
-            <span className="bg-gray-200 px-2 py-1 rounded">
-              termination_letter.pdf
-            </span>
+          <div className="mt-4 text-sm flex items- y gap-70">
+            <div className="mt- text-sm">
+              <p className="text-gray-500">Attachments</p>
+              <p className="bg-gray-200 px-2 py-1 rounded ">
+                termination_letter.pdf
+              </p>
+            </div>
+            <div className="w-[33%] ">
+              <p className="text-gray-500 mb-2">Suggested Lawyers</p>
+              <span>
+
+                <Select
+                  isMulti options={caseData?.lawyersData}
+                  className="text-sm w-[]"
+                  classNamePrefix="select"
+                  placeholder="Select lawyers..."
+                  onChange={(data) => setSelectedLawyer(data || [])}
+                />
+              </span>
+            </div>
+            <button disabled={selectedLaweyer.length == 0} className={` text-white px-4  rounded-xl text-[17px] whitespace-nowrap ${selectedLaweyer.length == 0 ?
+              "text-white bg-blue-400 cursor not cursor-not-allowed" : "text-white bg-blue-500 hover:bg-blue-600"}`}
+            >
+              Send Request
+            </button>
           </div>
 
         </div>
