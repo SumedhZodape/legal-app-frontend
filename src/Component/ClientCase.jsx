@@ -1,16 +1,56 @@
 import Select from "react-select";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 function ClientCase({ caseData }) {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [selectedLaweyer, setSelectedLawyer] = useState([]);
 
   console.log(caseData)
+
+  // update the case (Add requested lawyers)
+  const updateCase = async () => {
+    const caseId = caseData?.caseInfo?._id;
+    const requestedLawyers = selectedLaweyer?.map((ele)=>ele.value);
+
+    console.log(caseId)
+    console.log(requestedLawyers)
+
+    if (requestedLawyers.length === 0) {
+      return toast.error("Please select minimum one lawyer!")
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/client/updatecase", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${user.token}`
+        },
+        body: JSON.stringify({
+          caseId,
+          requestedLawyers
+        })
+      })
+
+      const res = await response.json();
+
+      if (res.success) {
+        toast.success(res.message)
+      } else {
+        toast.error(res.message)
+      }
+
+    } catch (error) {
+      toast.error("Server Error!")
+    }
+  }
 
   return (
     <>
       <div className="p-3 bg-gray-100  ">
 
-        <h1 className="text-2xl font-serif font-semibold mb-4">My Cases</h1>
+        <h1 className="text-2xl font-serif font-semibold mb-4">My Case</h1>
 
         <div className="bg-white rounded-lg shadow p-6 border">
 
@@ -104,6 +144,7 @@ function ClientCase({ caseData }) {
             </div>
             <button disabled={selectedLaweyer.length == 0} className={` text-white px-4  rounded-xl text-[17px] whitespace-nowrap ${selectedLaweyer.length == 0 ?
               "text-white bg-blue-400 cursor not cursor-not-allowed" : "text-white bg-blue-500 hover:bg-blue-600"}`}
+              onClick={updateCase}
             >
               Send Request
             </button>

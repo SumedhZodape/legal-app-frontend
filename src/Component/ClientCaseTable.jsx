@@ -67,11 +67,9 @@ function ClientCaseTable({caseData}) {
 
                                         <td className="p-2">
                                             <span
-                                                className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
-                                                    "PENDING"
-                                                )}`}
+                                                className={`px-3 py-1 rounded-full text-xs font-semibold`}
                                             >
-                                                ABCD
+                                                {case_data?.lawyerType}
                                             </span>
                                         </td>
 
@@ -106,7 +104,7 @@ function ClientCaseTable({caseData}) {
                                     }} />
                                 <div className="p-3 bg-gray-100  rounded-[10px]">
 
-                                    <h1 className="text-2xl font-serif font-semibold mb-4">My Cases</h1>
+                                    <h1 className="text-2xl font-serif font-semibold mb-4">My Case</h1>
 
                                     <div className="bg-white rounded-lg shadow p-6 border">
 
