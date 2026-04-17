@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import ClientPanel from '../Component/ClientPanel'
-import ClientCreateCase from '../Component/ClientCreateCase';
+import LawyerPanel from '../Component/LawyerPanel';
 import { useNavigate } from 'react-router-dom';
-import ClientCaseTable from '../Component/ClientCaseTable';
+import LawyerTable from '../Component/LawyerTable';
 
 
-function ClientDashboard() {
+function LawyerDashboard() {
     const user = JSON.parse(localStorage.getItem("user")) || {}
     const [selectedPanel, setSelectedPanel] = useState("Dashboard");
     const navigate = useNavigate();
@@ -18,10 +17,6 @@ function ClientDashboard() {
         },
         {
             name: "My Case",
-            classData: "fa-solid fa-user-group text-sm"
-        },
-        {
-            name: "Create Case",
             classData: "fa-solid fa-user-group text-sm"
         }
     ]
@@ -107,7 +102,7 @@ function ClientDashboard() {
                                 </div>
                                 <div>
                                     <h1 className="text-sm">{user?.result?.name}</h1>
-                                    <p className="text-sm text-gray-500">CLIENT</p>
+                                    <p className="text-sm text-gray-500">LAWYER</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3 text-gray-500 cursor-pointer text-sm" onClick={logout}>
@@ -121,13 +116,13 @@ function ClientDashboard() {
                 <div className='md:w-full md:h-screen'>
 
                     <div className='bg-gray-50 text-center p-3 text-gray-900 border-b border-gray-200 md:flex'>
-                        <h1 className='text-center text-sm font-bold font-serif'>Client Portal</h1>
+                        <h1 className='text-center text-sm font-bold font-serif'>Lawyer Portal</h1>
                     </div>
 
 
                     {
 
-                        selectedPanel === "Dashboard" ? <ClientPanel caseData={caseData} /> : selectedPanel === "My Case" ? <ClientCaseTable caseData={caseData} /> : <ClientCreateCase setSelectedPanel={setSelectedPanel} fetchCases={fetchCases} />
+                        selectedPanel === "Dashboard" ? <LawyerPanel caseData={caseData} /> : <LawyerTable caseData={caseData} /> 
 
                     }
 
@@ -139,4 +134,4 @@ function ClientDashboard() {
     )
 }
 
-export default ClientDashboard
+export default LawyerDashboard;

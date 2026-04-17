@@ -8,6 +8,7 @@ import Profile from './Pages/Profile';
 import ProtectRoute from './ProtectRoute';
 import AdminDashboard from './Pages/AdminDashboard';
 import ClientDashboard from './Pages/ClientDashboard';
+import LawyerDashboard from './Pages/LawyerDashboard';
 
 function App() {
 
@@ -35,6 +36,15 @@ function App() {
 
             <ProtectRoute>
               <ClientDashboard/>
+            </ProtectRoute>
+            
+          }/>
+
+           {/* lawyer dashboard */}
+          <Route path="/lawyer-dashboard" element={
+
+            <ProtectRoute>
+              <LawyerDashboard/>
             </ProtectRoute>
             
           }/>

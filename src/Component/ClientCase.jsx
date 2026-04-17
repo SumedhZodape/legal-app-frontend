@@ -2,7 +2,7 @@ import Select from "react-select";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-function ClientCase({ caseData }) {
+function ClientCase({ caseData, setSelectedPanel, fetchCases }) {
   const user = JSON.parse(localStorage.getItem("user"));
   const [selectedLaweyer, setSelectedLawyer] = useState([]);
 
@@ -37,6 +37,9 @@ function ClientCase({ caseData }) {
 
       if (res.success) {
         toast.success(res.message)
+        fetchCases()
+        setSelectedPanel("My Case")
+
       } else {
         toast.error(res.message)
       }

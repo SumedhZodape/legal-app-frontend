@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 import ClientCase from "./ClientCase";
 
-function ClientCreateCase() {
+function ClientCreateCase({setSelectedPanel, fetchCases}) {
     const {
         register,
         handleSubmit,
@@ -226,7 +226,7 @@ function ClientCreateCase() {
                                 </form>
                             </div>
                         </div>
-                    ) : <ClientCase caseData={caseData} />
+                    ) : <ClientCase caseData={caseData} setSelectedPanel={setSelectedPanel} fetchCases={fetchCases} />
             }
 
             {

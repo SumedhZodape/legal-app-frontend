@@ -7,13 +7,13 @@ const getStatusColor = (status) => {
 };
 
 
-function ClientCaseTable({caseData}) {
+function LawyerTable({ caseData }) {
 
     const [userData, setUserData] = useState([10, 30, 40]);
     const [caseModal, setCaseModal] = useState(false);
     const [singleCase, setSingleCase] = useState(null);
     const caseSeverity = "HIGH";
-    const testData = [10,30,40]
+    const testData = [10, 30, 40]
 
     return (
         <>
@@ -37,7 +37,7 @@ function ClientCaseTable({caseData}) {
                         <table className=" min-w-full text-sm border-0">
                             <thead className="bg-gray-50 text-gray-600">
                                 <tr>
-                                     <th className="p-2 text-left">#</th>
+                                    <th className="p-2 text-left">#</th>
                                     <th className="p-2 text-left">Problem Statement</th>
                                     <th className="p-2 text-left">Location</th>
                                     <th className="p-2 text-left">Case Date</th>
@@ -51,16 +51,16 @@ function ClientCaseTable({caseData}) {
                             <tbody>
                                 {caseData?.map((case_data, index) => (
                                     <tr key={index} className="border-0">
-                                        <td className="p-2 text-sm">{index+1}</td>
+                                        <td className="p-2 text-sm">{index + 1}</td>
                                         <td className="p-2">
                                             <p className="font-medium text-gray-900"
-                                            title={case_data?.problemStatement}>{case_data?.problemStatement?.slice(0,20) + "..."}</p>
+                                                title={case_data?.problemStatement}>{case_data?.problemStatement?.slice(0, 20) + "..."}</p>
                                             {/* <p className="text-gray-400 text-xs">sumedh@gmail.com</p> */}
                                         </td>
 
                                         <td className="p-2 text-sm">{case_data?.location}</td>
 
-                                        <td className="p-2 text-gray-900">{new Date(case_data?.caseDate) .toLocaleDateString("en-GB").replace(/\//g, "-")}</td>
+                                        <td className="p-2 text-gray-900">{new Date(case_data?.caseDate).toLocaleDateString("en-GB").replace(/\//g, "-")}</td>
 
                                         <td className="p-2 text-sm font-medium text-gray-900">{case_data?.aiAnalysis?.caseSeverity}</td>
 
@@ -78,10 +78,10 @@ function ClientCaseTable({caseData}) {
                                             <button className="px-3 py-1 text-xs cursor-pointer"
                                             >
                                                 <i className="fa-solid fa-eye text-2xl text-blue-400"
-                                                onClick={()=>{
-                                                    setCaseModal(true)
-                                                    setSingleCase(case_data)
-                                                }}></i>
+                                                    onClick={() => {
+                                                        setCaseModal(true)
+                                                        setSingleCase(case_data)
+                                                    }}></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -100,7 +100,7 @@ function ClientCaseTable({caseData}) {
                         left-0 top-0 flex justify-center items-center">
                             <div className="p-4 w-[80%] relative">
                                 <i className="fa-solid fa-circle-xmark absolute top-2 right-2 text-red-500
-                                    text-2xl cursor-pointer" onClick={()=>{
+                                    text-2xl cursor-pointer" onClick={() => {
                                         setCaseModal(false)
                                     }} />
                                 <div className="p-3 bg-gray-100  rounded-[10px]">
@@ -115,7 +115,7 @@ function ClientCaseTable({caseData}) {
 
                                         <div className="flex gap-4 text-sm text-gray-500 mb-4">
                                             <span>📍 {singleCase?.location}</span>
-                                            <span>📅 {new Date(singleCase?.caseDate) .toLocaleDateString("en-GB").replace(/\//g, "-")}</span>
+                                            <span>📅 {new Date(singleCase?.caseDate).toLocaleDateString("en-GB").replace(/\//g, "-")}</span>
                                             <span className="ml-auto bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
                                                 {singleCase?.caseStatus}
                                             </span>
@@ -196,4 +196,4 @@ function ClientCaseTable({caseData}) {
     )
 }
 
-export default ClientCaseTable;
+export default LawyerTable;
