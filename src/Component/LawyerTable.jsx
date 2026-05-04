@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const getStatusColor = (status) => {
     if (status === "APPROVED") return "bg-green-100 text-green-600";
@@ -7,13 +8,48 @@ const getStatusColor = (status) => {
 };
 
 
-function LawyerTable({ caseData }) {
-
+function LawyerTable({ caseData, fetchCases }) {
+    const user = JSON.parse(localStorage.getItem("user")) || {}
     const [userData, setUserData] = useState([10, 30, 40]);
     const [caseModal, setCaseModal] = useState(false);
     const [singleCase, setSingleCase] = useState(null);
     const caseSeverity = "HIGH";
     const testData = [10, 30, 40]
+    const [remark, setRemark] = useState("")
+
+
+
+    console.log(singleCase)
+
+    const acceptRequest = async () => {
+        try {
+            let caseID = singleCase._id;
+            const lawyerResponse = remark;
+
+            const response = await fetch(`http://localhost:8000/lawyer/acceptrequest/${caseID}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${user.token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ lawyerResponse })
+            })
+
+            const res = await response.json();
+
+            if (res.success) {
+                toast.success(res.message);
+                setCaseModal(false);
+                fetchCases();
+            } else {
+                toast.error(res.message)
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error("Server Error!")
+        }
+    }
 
     return (
         <>
@@ -44,6 +80,7 @@ function LawyerTable({ caseData }) {
                                     <th className="p-2 text-left">Case Severity</th>
                                     <th className="p-2 text-left">Fee Range</th>
                                     <th className="p-2 text-left">Type Of LawyerNeeded</th>
+                                    <th className="p-2 text-left">Case Status</th>
                                     <th className="p-2 text-left">Actions</th>
                                 </tr>
                             </thead>
@@ -74,6 +111,8 @@ function LawyerTable({ caseData }) {
                                             </span>
                                         </td>
 
+                                        <td className="p-2 text-sm">{case_data?.caseStatus}</td>
+
                                         <td className="p-2 space-x-2">
                                             <button className="px-3 py-1 text-xs cursor-pointer"
                                             >
@@ -84,6 +123,8 @@ function LawyerTable({ caseData }) {
                                                     }}></i>
                                             </button>
                                         </td>
+
+
                                     </tr>
                                 ))}
                             </tbody>
@@ -177,12 +218,34 @@ function LawyerTable({ caseData }) {
 
                                         </div>
 
-                                        <div className="mt-4 text-sm">
-                                            <p className="text-gray-500">Attachments</p>
-                                            <span className="bg-gray-200 px-2 py-1 rounded">
-                                                termination_letter.pdf
-                                            </span>
+                                        <div className="flex justify-between items-center">
+
+                                            <div className="mt-4 text-sm">
+                                                <p className="text-gray-500">Attachments</p>
+                                                <span className="bg-gray-200 px-2 py-1 rounded">
+                                                    termination_letter.pdf
+                                                </span>
+                                            </div>
+
+                                            <div>
+                                                {
+                                                    singleCase?.caseStatus === "NEW" ? (
+                                                        <>
+                                                            <input type="text" className="border border-black p-1
+                                                        rounded me-1" placeholder="Enter Remark" onKeyUp={(e) => {
+                                                                    setRemark(e.target.value)
+                                                                }} />
+                                                            <button className="px-3 py-1 text-xs cursor-pointer bg-green-500 text-white rounded-xl"
+                                                                onClick={acceptRequest}
+                                                            >
+                                                                Accept Request
+                                                            </button>
+                                                        </>
+                                                    ) : null
+                                                }
+                                            </div>
                                         </div>
+
 
                                     </div>
 

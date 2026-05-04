@@ -35,7 +35,7 @@ function LawyerDashboard() {
 
     const fetchCases = async () => {
         try {
-            const response = await fetch("http://localhost:8000/client/mycases", {
+            const response = await fetch("http://localhost:8000/lawyer/mycases", {
                 headers:{
                     "Authorization":`Bearer ${user.token}`
                 }
@@ -122,7 +122,7 @@ function LawyerDashboard() {
 
                     {
 
-                        selectedPanel === "Dashboard" ? <LawyerPanel caseData={caseData} /> : <LawyerTable caseData={caseData} /> 
+                        selectedPanel === "Dashboard" ? <LawyerPanel caseData={caseData} /> : <LawyerTable caseData={caseData} fetchCases={fetchCases} /> 
 
                     }
 
