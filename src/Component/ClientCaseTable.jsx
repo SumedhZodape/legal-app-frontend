@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const getStatusColor = (status) => {
     if (status === "APPROVED") return "bg-green-100 text-green-600";
@@ -7,13 +8,43 @@ const getStatusColor = (status) => {
 };
 
 
-function ClientCaseTable({caseData}) {
-
+function ClientCaseTable({ caseData, fetchCases }) {
+    const user = JSON.parse(localStorage.getItem("user")) || {}
     const [userData, setUserData] = useState([10, 30, 40]);
     const [caseModal, setCaseModal] = useState(false);
     const [singleCase, setSingleCase] = useState(null);
     const caseSeverity = "HIGH";
-    const testData = [10,30,40]
+    const testData = [10, 30, 40]
+
+
+    const updateStatus = async (status) => {
+        try {
+            let caseID = singleCase._id;
+
+            const response = await fetch(`http://localhost:8000/client/updatestatus/${caseID}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${user.token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ status })
+            })
+
+            const res = await response.json();
+
+            if (res.success) {
+                toast.success(res.message);
+                setCaseModal(false);
+                fetchCases();
+            } else {
+                toast.error(res.message)
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error("Server Error!")
+        }
+    }
 
     return (
         <>
@@ -22,7 +53,7 @@ function ClientCaseTable({caseData}) {
                 <div className="flex-1 md:p-2">
 
                     <div className="flex justify-between items-center mb-2">
-                        <h1 className="text-lg font-serif font-bold text-gray-900 p-2">Manage Lawyer's</h1>
+                        <h1 className="text-lg font-serif font-bold text-gray-900 p-2">Manage Cases</h1>
 
                         <select className="border-0 w-20 rounded px-3 py-2">
                             <option>All</option>
@@ -37,13 +68,14 @@ function ClientCaseTable({caseData}) {
                         <table className=" min-w-full text-sm border-0">
                             <thead className="bg-gray-50 text-gray-600">
                                 <tr>
-                                     <th className="p-2 text-left">#</th>
+                                    <th className="p-2 text-left">#</th>
                                     <th className="p-2 text-left">Problem Statement</th>
                                     <th className="p-2 text-left">Location</th>
                                     <th className="p-2 text-left">Case Date</th>
                                     <th className="p-2 text-left">Case Severity</th>
                                     <th className="p-2 text-left">Fee Range</th>
                                     <th className="p-2 text-left">Type Of LawyerNeeded</th>
+                                    <th className="p-2 text-left">Case Status</th>
                                     <th className="p-2 text-left">Actions</th>
                                 </tr>
                             </thead>
@@ -51,16 +83,16 @@ function ClientCaseTable({caseData}) {
                             <tbody>
                                 {caseData?.map((case_data, index) => (
                                     <tr key={index} className="border-0">
-                                        <td className="p-2 text-sm">{index+1}</td>
+                                        <td className="p-2 text-sm">{index + 1}</td>
                                         <td className="p-2">
                                             <p className="font-medium text-gray-900"
-                                            title={case_data?.problemStatement}>{case_data?.problemStatement?.slice(0,20) + "..."}</p>
+                                                title={case_data?.problemStatement}>{case_data?.problemStatement?.slice(0, 20) + "..."}</p>
                                             {/* <p className="text-gray-400 text-xs">sumedh@gmail.com</p> */}
                                         </td>
 
                                         <td className="p-2 text-sm">{case_data?.location}</td>
 
-                                        <td className="p-2 text-gray-900">{new Date(case_data?.caseDate) .toLocaleDateString("en-GB").replace(/\//g, "-")}</td>
+                                        <td className="p-2 text-gray-900">{new Date(case_data?.caseDate).toLocaleDateString("en-GB").replace(/\//g, "-")}</td>
 
                                         <td className="p-2 text-sm font-medium text-gray-900">{case_data?.aiAnalysis?.caseSeverity}</td>
 
@@ -74,14 +106,21 @@ function ClientCaseTable({caseData}) {
                                             </span>
                                         </td>
 
+                                        <td className={
+                                            case_data.caseStatus === "NEW" ? "p-2 text-sm font-bold text-orange-400": 
+                                            case_data.caseStatus === "ONGOING" ? "p-2 text-sm font-bold text-amber-300": 
+                                            case_data.caseStatus === "STOPPED" ? "p-2 text-sm font-bold text-red-500": 
+                                            case_data.caseStatus === "COMPLETED" ? "p-2 text-sm font-bold text-green-900":null 
+                                        }>{case_data?.caseStatus}</td>
+
                                         <td className="p-2 space-x-2">
                                             <button className="px-3 py-1 text-xs cursor-pointer"
                                             >
                                                 <i className="fa-solid fa-eye text-2xl text-blue-400"
-                                                onClick={()=>{
-                                                    setCaseModal(true)
-                                                    setSingleCase(case_data)
-                                                }}></i>
+                                                    onClick={() => {
+                                                        setCaseModal(true)
+                                                        setSingleCase(case_data)
+                                                    }}></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -100,7 +139,7 @@ function ClientCaseTable({caseData}) {
                         left-0 top-0 flex justify-center items-center">
                             <div className="p-4 w-[80%] relative">
                                 <i className="fa-solid fa-circle-xmark absolute top-2 right-2 text-red-500
-                                    text-2xl cursor-pointer" onClick={()=>{
+                                    text-2xl cursor-pointer" onClick={() => {
                                         setCaseModal(false)
                                     }} />
                                 <div className="p-3 bg-gray-100  rounded-[10px]">
@@ -115,7 +154,7 @@ function ClientCaseTable({caseData}) {
 
                                         <div className="flex gap-4 text-sm text-gray-500 mb-4">
                                             <span>📍 {singleCase?.location}</span>
-                                            <span>📅 {new Date(singleCase?.caseDate) .toLocaleDateString("en-GB").replace(/\//g, "-")}</span>
+                                            <span>📅 {new Date(singleCase?.caseDate).toLocaleDateString("en-GB").replace(/\//g, "-")}</span>
                                             <span className="ml-auto bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
                                                 {singleCase?.caseStatus}
                                             </span>
@@ -177,13 +216,38 @@ function ClientCaseTable({caseData}) {
 
                                         </div>
 
-                                        <div className="mt-4 text-sm">
-                                            <p className="text-gray-500">Attachments</p>
-                                            <span className="bg-gray-200 px-2 py-1 rounded">
-                                                termination_letter.pdf
-                                            </span>
-                                        </div>
 
+                                        <div className="flex justify-between items-center">
+
+                                            <div className="mt-4 text-sm">
+                                                <p className="text-gray-500">Attachments</p>
+                                                <span className="bg-gray-200 px-2 py-1 rounded">
+                                                    termination_letter.pdf
+                                                </span>
+                                            </div>
+
+                                            {
+                                                singleCase?.caseStatus === "ONGOING" ? (
+                                                    <>
+                                                        <button className="px-3 py-1 text-xs cursor-pointer bg-red-500 text-white rounded-xl"
+                                                            onClick={() => {
+                                                                updateStatus("STOPPED")
+                                                            }}
+                                                        >
+                                                            Stop Case
+                                                        </button>
+                                                        <button className="px-3 py-1 text-xs cursor-pointer bg-green-500 text-white rounded-xl"
+                                                            onClick={() => {
+                                                                updateStatus("COMPLETED")
+                                                            }}
+                                                        >
+                                                            Complete Case
+                                                        </button>
+                                                    </>
+                                                ) : null
+                                            }
+
+                                        </div>
                                     </div>
 
                                 </div>

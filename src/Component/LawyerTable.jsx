@@ -21,7 +21,7 @@ function LawyerTable({ caseData, fetchCases }) {
 
     console.log(singleCase)
 
-    const acceptRequest = async () => {
+    const acceptRequest = async (status) => {
         try {
             let caseID = singleCase._id;
             const lawyerResponse = remark;
@@ -32,7 +32,7 @@ function LawyerTable({ caseData, fetchCases }) {
                     "Authorization": `Bearer ${user.token}`,
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ lawyerResponse })
+                body: JSON.stringify({ lawyerResponse, status })
             })
 
             const res = await response.json();
@@ -111,7 +111,12 @@ function LawyerTable({ caseData, fetchCases }) {
                                             </span>
                                         </td>
 
-                                        <td className="p-2 text-sm">{case_data?.caseStatus}</td>
+                                        <td className={
+                                            case_data.caseStatus === "NEW" ? "p-2 text-sm font-bold text-orange-400": 
+                                            case_data.caseStatus === "ONGOING" ? "p-2 text-sm font-bold text-amber-300": 
+                                            case_data.caseStatus === "STOPPED" ? "p-2 text-sm font-bold text-red-500": 
+                                            case_data.caseStatus === "COMPLETED" ? "p-2 text-sm font-bold text-green-900":null 
+                                        }>{case_data?.caseStatus}</td>
 
                                         <td className="p-2 space-x-2">
                                             <button className="px-3 py-1 text-xs cursor-pointer"
@@ -236,9 +241,25 @@ function LawyerTable({ caseData, fetchCases }) {
                                                                     setRemark(e.target.value)
                                                                 }} />
                                                             <button className="px-3 py-1 text-xs cursor-pointer bg-green-500 text-white rounded-xl"
-                                                                onClick={acceptRequest}
+                                                                onClick={() => {
+                                                                    acceptRequest("ONGOING")
+                                                                }}
                                                             >
-                                                                Accept Request
+                                                                Accept Case
+                                                            </button>
+                                                        </>
+                                                    ) : singleCase?.caseStatus === "ONGOING" ? (
+                                                        <>
+                                                            <input type="text" className="border border-black p-1
+                                                        rounded me-1" placeholder="Enter Remark" onKeyUp={(e) => {
+                                                                    setRemark(e.target.value)
+                                                                }} />
+                                                            <button className="px-3 py-1 text-xs cursor-pointer bg-red-500 text-white rounded-xl"
+                                                                onClick={() => {
+                                                                    acceptRequest("STOPPED")
+                                                                }}
+                                                            >
+                                                                Stop Case
                                                             </button>
                                                         </>
                                                     ) : null

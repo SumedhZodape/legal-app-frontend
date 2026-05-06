@@ -127,7 +127,7 @@ function ClientDashboard() {
 
                     {
 
-                        selectedPanel === "Dashboard" ? <ClientPanel caseData={caseData} /> : selectedPanel === "My Case" ? <ClientCaseTable caseData={caseData} /> : <ClientCreateCase setSelectedPanel={setSelectedPanel} fetchCases={fetchCases} />
+                        selectedPanel === "Dashboard" ? <ClientPanel caseData={caseData} /> : selectedPanel === "My Case" ? <ClientCaseTable caseData={caseData} fetchCases={fetchCases} /> : <ClientCreateCase setSelectedPanel={setSelectedPanel} fetchCases={fetchCases} />
 
                     }
 
