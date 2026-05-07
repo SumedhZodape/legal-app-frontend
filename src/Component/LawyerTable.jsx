@@ -26,7 +26,7 @@ function LawyerTable({ caseData, fetchCases }) {
             let caseID = singleCase._id;
             const lawyerResponse = remark;
 
-            const response = await fetch(`http://localhost:8000/lawyer/acceptrequest/${caseID}`, {
+            const response = await fetch(`http://13.235.99.187:3000/lawyer/acceptrequest/${caseID}`, {
                 method: "PUT",
                 headers: {
                     "Authorization": `Bearer ${user.token}`,

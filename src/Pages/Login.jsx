@@ -25,7 +25,7 @@ function Login() {
         console.log(data)
 
         try {
-            let response = await fetch("http://localhost:8000/auth/login", {
+            let response = await fetch("http://13.235.99.187:3000/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

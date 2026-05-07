@@ -27,7 +27,7 @@ function AdminDashboard() {
     const fetchLawyers = async () => {
         try {
 
-            const response = await fetch("http://localhost:8000/admin/getlawyers", {
+            const response = await fetch("http://13.235.99.187:3000/admin/getlawyers", {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }

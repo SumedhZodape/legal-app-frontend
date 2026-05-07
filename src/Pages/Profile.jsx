@@ -33,7 +33,7 @@ const LawyerProfile = () => {
 
 
         try {
-            const response = await fetch("http://localhost:8000/lawyer/profile", {
+            const response = await fetch("http://13.235.99.187:3000/lawyer/profile", {
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"

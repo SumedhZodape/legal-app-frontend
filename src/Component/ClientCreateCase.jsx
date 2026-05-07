@@ -71,7 +71,7 @@ function ClientCreateCase({setSelectedPanel, fetchCases}) {
         }
 
         try {
-            const response = await fetch("http://localhost:8000/client/createcase", {
+            const response = await fetch("http://13.235.99.187:3000/client/createcase", {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${user?.token}`,

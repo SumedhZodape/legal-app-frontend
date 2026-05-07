@@ -21,7 +21,7 @@ function ClientCaseTable({ caseData, fetchCases }) {
         try {
             let caseID = singleCase._id;
 
-            const response = await fetch(`http://localhost:8000/client/updatestatus/${caseID}`, {
+            const response = await fetch(`http://13.235.99.187:3000/client/updatestatus/${caseID}`, {
                 method: "PUT",
                 headers: {
                     "Authorization": `Bearer ${user.token}`,

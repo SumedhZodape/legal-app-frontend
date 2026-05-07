@@ -44,7 +44,7 @@ const AdminTable = ({ lawyerData, fetchLawyers }) => {
                 remark
             }
 
-            const response = await fetch(`http://localhost:8000/admin/updateLawyerStatus/${selectedLawyer._id}`, {
+            const response = await fetch(`http://13.235.99.187:3000/admin/updateLawyerStatus/${selectedLawyer._id}`, {
                 method: "PUT",
                 headers: {
                     "Authorization": `Bearer ${token}`,

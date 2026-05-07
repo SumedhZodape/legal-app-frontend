@@ -40,7 +40,7 @@ function ClientDashboard() {
 
     const fetchCases = async () => {
         try {
-            const response = await fetch("http://localhost:8000/client/mycases", {
+            const response = await fetch("http://13.235.99.187:3000/client/mycases", {
                 headers:{
                     "Authorization":`Bearer ${user.token}`
                 }

@@ -21,7 +21,7 @@ function ClientCase({ caseData, setSelectedPanel, fetchCases }) {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/client/updatecase", {
+      const response = await fetch("http://13.235.99.187:3000/client/updatecase", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
